@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Majesty Avocados</title>
+    <link rel="stylesheet" href="../static/css/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://kit.fontawesome.com/5703662b44.js" crossorigin="anonymous"></script>
+</head>
+
+<body id="page-top">
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
+        <div class="container"><a class="navbar-brand js-scroll-trigger" href="#page-top">Majesty Avocados</a><button data-toggle="collapse" data-target="#navbarResponsive" class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="index.html">Home</a></li>
+                    <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="price.html">Price Prediction</a></li>
+                    <li class="nav-item mx-0 mx-lg-1" role="presentation"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="regions.html">Target Regions</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <header class="masthead bg-primary text-white text-center">
+        <div class="container">
+            <h1>Regional Analysis</h1>
+            <h2 class="font-weight-light mb-0">See the latest data on avocado loving cities.</h2>
+        </div>
+    </header>
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <h2 class="text-uppercase text-center text-secondary">Avocado markets analysis</h2>
+            <hr class="star-dark mb-5">
+            <div class="row">
+                <div class="col-3">
+                    <form>
+                        <div class="form-group"><label>Regions (Select Up To 3)</label>
+                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="region-dropdown-regions-1" type="button" style="margin-bottom:10px">Select a Region&nbsp;</button>
+                                <div class="dropdown-menu" role="menu"></div>
+                            </div>
+                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="region-dropdown-regions-2" type="button" style="margin-bottom:10px">Select a Region&nbsp;</button>
+                                <div class="dropdown-menu" role="menu"></div>
+                            </div>
+                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="region-dropdown-regions-3" type="button" style="margin-bottom:10px">Select a Region&nbsp;</button>
+                                <div class="dropdown-menu" role="menu"></div>
+                            </div><label>Time Period</label>
+                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="time-period-dropdown-regions" type="button" style="margin-bottom:10px">Select a Length of Time</button>
+                                <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">One Year</a><a class="dropdown-item" role="presentation" href="#">One Month</a><a class="dropdown-item" role="presentation" href="#">All Time</a></div>
+                            </div><label>Start Date of Time Period</label><input class="form-control" id="date-picker-regions" type="date"><label>Volume or Price</label>
+                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="volume-price-regions" type="button">Dropdown </button>
+                                <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="">Volume</a><a class="dropdown-item" role="presentation" href="">Price</a><a class="dropdown-item" role="presentation" href="">Total Revenue</a></div>
+                            </div><button class="btn btn-warning" id="submit-button-regions" style="margin: 20px;">Submit</button></div>
+                    </form>
+                </div>
+                <div class="col">
+                    <div><canvas data-bs-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Revenue&quot;,&quot;backgroundColor&quot;:&quot;#4e73df&quot;,&quot;borderColor&quot;:&quot;#4e73df&quot;,&quot;data&quot;:[&quot;4500&quot;,&quot;5300&quot;,&quot;6250&quot;,&quot;7800&quot;,&quot;9800&quot;,&quot;15000&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:false},&quot;title&quot;:{&quot;display&quot;:true,&quot;text&quot;:&quot;Sample Chart&quot;}}}"></canvas></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer text-center">
+        <div class="container">
+            <h2 class="text-uppercase text-center text-white">Market Trends</h2>
+            <hr class="star-light mb-5">
+            <div class="row">
+                <div class="col-lg-4 ml-auto">
+                    <h1>Most Profitable&nbsp;</h1>
+                    <p class="lead" id="most-profitable">The most profitable region is [insert region here]. This region has the highest current combination of price and volume.</p>
+                </div>
+                <div class="col-lg-4 mr-auto">
+                    <h1>Highest Price</h1>
+                    <p class="lead" id="highest-price">The region with the highest average avocado price is [insert region here].&nbsp;<br></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 ml-auto">
+                    <h1>Fastest Growing Volume</h1>
+                    <p class="lead" id="fastest-growing">The region with the fastest growing volume is [insert region here]. This region has the highest average annual increase in avocado volume.</p>
+                </div>
+                <div class="col-lg-4 mr-auto">
+                    <h1>Highest Price Inflation Rate</h1>
+                    <p class="lead" id="highest-inflation">The region with the highest price inflation is [insert region here]. This region has the highest average annual increase in avocado prices.<br></p>
+                </div>
+            </div>
+            <div class="text-center mt-4"></div>
+        </div>
+    </footer>
+    <div class="copyright py-4 text-center text-white">
+        <div class="container"><small>Majesty Avocados LLC.</small></div>
+    </div>
+    <div class="d-lg-none scroll-to-top position-fixed rounded"><a class="d-block js-scroll-trigger text-center text-white rounded" href="#page-top"><i class="fa fa-chevron-up"></i></a></div>
+    <script src="../static/js/lib/jquery.min.js"></script>
+    <script src="../static/js/lib/bootstrap.min.js"></script>
+    <script src="../static/js/chart.min.js"></script>
+    <script src="../static/js/bs-init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="../static/js/freelancer.js"></script>
+</body>
+
+</html>
