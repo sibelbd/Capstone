@@ -8,9 +8,11 @@
     <link rel="stylesheet" href="../static/css/lib/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
-    <link rel="stylesheet" href="../static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/fonts/font-awesome.min.css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="https://kit.fontawesome.com/5703662b44.js" crossorigin="anonymous"></script>
+
+
 </head>
 
 <body id="page-top">
@@ -41,19 +43,19 @@
                     <form>
                         <div class="form-group"><label>Regions (Select Up To 3)</label>
                             <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"  type="button" style="margin-bottom:10px">Select a Region&nbsp;</button>
-                                <div class="dropdown-menu" id="region-dropdown-regions-1" role="menu"></div>
+                                <div class="dropdown-menu" id="region-dropdown-regions-1" role="menu" style="max-height: 200px; overflow-y: auto"></div>
                             </div>
-                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="region-dropdown-regions-2" type="button" style="margin-bottom:10px">Select a Region&nbsp;</button>
-                                <div class="dropdown-menu" role="menu"></div>
+                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"  type="button" style="margin-bottom:10px">Select a Region&nbsp;</button>
+                                <div class="dropdown-menu" id="region-dropdown-regions-2" role="menu" style="max-height: 200px; overflow-y: auto"></div>
                             </div>
-                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="region-dropdown-regions-3" type="button" style="margin-bottom:10px">Select a Region&nbsp;</button>
-                                <div class="dropdown-menu" role="menu"></div>
+                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"  type="button" style="margin-bottom:10px">Select a Region&nbsp;</button>
+                                <div class="dropdown-menu" id="region-dropdown-regions-3" role="menu" style="max-height: 200px; overflow-y: auto"></div>
                             </div><label>Time Period</label>
-                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="time-period-dropdown-regions" type="button" style="margin-bottom:10px">Select a Length of Time</button>
-                                <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">One Year</a><a class="dropdown-item" role="presentation" href="#">One Month</a><a class="dropdown-item" role="presentation" href="#">All Time</a></div>
+                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"  type="button" style="margin-bottom:10px">Select a Length of Time</button>
+                                <div class="dropdown-menu" id="time-period-dropdown-regions" role="menu"><a class="dropdown-item" role="presentation" href="#">One Year</a><a class="dropdown-item" role="presentation" href="#">One Month</a><a class="dropdown-item" role="presentation" href="#">All Time</a></div>
                             </div><label>Start Date of Time Period</label><input class="form-control" id="date-picker-regions" type="date"><label>Volume or Price</label>
-                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="volume-price-regions" type="button">Dropdown </button>
-                                <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="">Volume</a><a class="dropdown-item" role="presentation" href="">Price</a><a class="dropdown-item" role="presentation" href="">Total Revenue</a></div>
+                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"  type="button">Dropdown </button>
+                                <div class="dropdown-menu" id="volume-price-regions" role="menu"><a class="dropdown-item" role="presentation" href="">Volume</a><a class="dropdown-item" role="presentation" href="">Price</a><a class="dropdown-item" role="presentation" href="">Total Revenue</a></div>
                             </div><button class="btn btn-warning" id="submit-button-regions" style="margin: 20px;">Submit</button></div>
                     </form>
                 </div>

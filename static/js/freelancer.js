@@ -78,7 +78,7 @@
 
       let chart = document.querySelector('canvas').chart;
 
-      $(submit-button-regions).on('click', function(){
+      $('submit-button-regions').on('click', function(){
 
           // When the document is clicked, update the chart
           // with a random value and animate it.
@@ -90,34 +90,29 @@
   });
 
   $(document).ready(function(){
-    // $.ajax({
-    // type: "POST",
-    // url: "/_get_all_regions",
-    // data: "{}",
-    // contentType: "application/json; charset=utf-8",
-    // dataType: "json",
-    //     success: function(msg) {
-    //         $("#region-dropdown-regions-1").get(0).options.length = 0;
-    //         $("#region-dropdown-regions-1").get(0).options[0] = new Option("Select Region", "-1");
-    //
-    //         $.each(msg.d, function(index, item) {
-    //             $("#region-dropdown-regions-1").get(0).options[$("#region-dropdown-regions-1").get(0).options.length]
-    //                   = new Option(item.Display, item.Value);
-    //         });
-    //     },
-    //     error: function() {
-    //         alert("Failed to load regions");
-    //     }
-  // var myOptions = {
-  //     val1 : 'text1',
-  //     val2 : 'text2'
-  // };
-  // $.each(myOptions, function(val, text) {
-  //     $('#mySelect').append( new Option(text,val) );
-  // });
-    console.log("ready!")
+    $.ajax({
+      url: "/_get_all_regions",
+      dataType: "json",
+      success: function (data) {
+        console.log(data)
+        $.each(data, function(val, text) {
+          $('#region-dropdown-regions-1').append( new Option(text,val) );
+          $('#region-dropdown-regions-2').append( new Option(text,val) );
+          $('#region-dropdown-regions-3').append( new Option(text,val) );
+      });
+      }
+    })
+    //   var myOptions = {
+    //       val1 : 'text1',
+    //       val2 : 'text2'
+    //   };
+    //   $.each(myOptions, function(val, text) {
+    //       $('#region-dropdown-regions-1').append( new Option(text,val) );
+    //   });
+    //console.log("ready!")
 
     });
+
  
 })(jQuery); // End of use strict
 

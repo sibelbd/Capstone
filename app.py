@@ -5,8 +5,6 @@ import pandas as pd
 app = Flask(__name__)
 fa = FontAwesome(app)
 
-
-
 @app.route('/')
 @app.route('/index.html')
 def index():
@@ -30,8 +28,7 @@ def get_all_regions():
 
     # remove invalid regions
     regions = [x for x in regions if x not in ['GreatLakes', 'Midsouth', 'Northeast', 'NorthernNewEngland', 'Plains', 'SouthCentral', 'Southeast', 'West', 'TotalUS']]
-    # print(regions)
-    return jsonify(data.region.unique())
+    return jsonify(regions)
 
 if __name__ == '__main__':
     app.run()
