@@ -63,11 +63,34 @@ def return_filtered_dataset():
         # if of all time avoid filtering data for time
         enddate = None
 
+    # pull data into pandas dataframe
+    data = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])
+
+    # Get dataset for region 1
+    # Check for if time period is all time or not
+    if timeperiod == "All Time ":
+        # region 1 filtering
+        region1_filtered_data = data.loc[(data['region'] == region1) & (data['Date'] > startdate.strftime("%m/%d/%Y")) & (data['Date'] < enddate.strftime("%m/%d/%Y"))]
+
+        # optional region 2 filtering
+        if region2 != "None " and region2 != "Select a Region":
 
 
-    # # Get dataset for region 1
-    # # pull data into pandas dataframe
-    # data = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])
+        # optional region 3 filtering
+
+        # return jsonified array of dataset
+
+    else:
+
+        # region 1 filtering
+
+        # optional region 2 filtering
+
+        # optional region 3 filtering
+
+        # return jsonified array of datasets
+
+
     #
     # # filter dataframe
     # region1_filtered_data = data.loc[(data['region'] == region1) & (data['Date'] > startdate) & (data['Date'] < )]
