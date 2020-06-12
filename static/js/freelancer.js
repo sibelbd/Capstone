@@ -59,59 +59,79 @@
       $(this).removeClass("floating-label-form-group-with-focus");
     });
   });
-    
+
+  //Chart updating info
   $(function(){
         let chart = document.querySelector('canvas').chart;
-    
+
         $(document).on('click', function(){
 
-            // When the document is clicked, update the chart 
+            // When the document is clicked, update the chart
             // with a random value and animate it.
 
             chart.data.datasets[0].data[2] = Math.random()*10000;
             chart.update();
         });
   });
-  //Chart updating info
 
-  $(function(){
 
-      let chart = document.querySelector('canvas').chart;
+  $(function() {
 
-      $('submit-button-regions').on('click', function(){
-
-          // When the document is clicked, update the chart
-          // with a random value and animate it.
-
-          chart.data.datasets[0].data[2] = Math.random()*10000;
-          chart.update();
-      });
-
-  });
-
-  $(document).ready(function(){
+    // ajax request to get list of regions and populate region dropdowns
     $.ajax({
       url: "/_get_all_regions",
       dataType: "json",
       success: function (data) {
-        console.log(data)
-        $.each(data, function(val, text) {
-          $('#region-dropdown-regions-1').append( new Option(text,val) );
-          $('#region-dropdown-regions-2').append( new Option(text,val) );
-          $('#region-dropdown-regions-3').append( new Option(text,val) );
-      });
+        //$('#region-dropdown-regions-2').append(new Option('None', 'None'));
+        $('#region-dropdown-regions-2').append('<a role="presentation" class="dropdown-item">None</a>');
+        $('#region-dropdown-regions-3').append('<a role="presentation" class="dropdown-item">None</a>');
+        $.each(data, function (val, text) {
+          $('#region-dropdown-regions-1').append('<a role="presentation" class="dropdown-item">'+ text +'</a>');
+          $('#region-dropdown-regions-2').append('<a role="presentation" class="dropdown-item">'+ text +'</a>');
+          $('#region-dropdown-regions-3').append('<a role="presentation" class="dropdown-item">'+ text +'</a>');
+          $('#region-dropdown-price').append('<a role="presentation" class="dropdown-item">'+ text +'</a>');
+        });
       }
-    })
-    //   var myOptions = {
-    //       val1 : 'text1',
-    //       val2 : 'text2'
-    //   };
-    //   $.each(myOptions, function(val, text) {
-    //       $('#region-dropdown-regions-1').append( new Option(text,val) );
-    //   });
-    //console.log("ready!")
 
     });
+
+  });
+
+  $(document).on('click', '.dropdown-menu a', function () {
+      console.log("Selected Option:"+$(this).text());
+    $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+    $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+  });
+
+  $('#submit-button-regions').click(function () {
+
+    //check that form is filled out properly
+    if ($('#region1-btn').text() != "Select a Region" && $('#time-period-btn').text() !== "Select a Region" &&
+        $('#date-picker-regions').val() !== "" && $('#volume-price-btn').text() !== "Select a Region"){
+        var arr = [$('#region1-btn').text(), $('#region2-btn').text(), $('#region3-btn').text(),
+        $('#time-period-btn').text(), $('#date-picker-regions').val(), $('#volume-price-btn').text()]
+    } else{
+      alert("Please ensure all fields are filled out.")
+    }
+    console.log($('#date-picker-regions').val())
+    console.log(JSON.stringify({html_data: arr}))
+
+    // // send filters
+    $.ajax({
+        url: '/region_graph_filters',
+        type: 'POST',
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify({html_data: arr}),
+        success: function(response) {
+              console.log(response);
+          }
+
+        // // receive filtered dataset from web server
+        // success: function(data) {
+        //   alert(data);
+        // }
+    })
+  })
 
  
 })(jQuery); // End of use strict
