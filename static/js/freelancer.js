@@ -126,12 +126,50 @@
         success: function(data) {
               console.log(data);
 
-              //separate jsons into arrays
-              var region1 = data[0];
-              var region2 = data[1];
-              var region3 = data[2];
+              //Get region1 data for Chart.js
+              var region1 = JSON.parse(data[0])
+              var region1_date = []
+              var region1_vol_price = []
+
+              // $.each(region1[Date], function(index, element) {
+              //       //from within the date key of the region 1 json, take each element and add it to region1_date list
+              //     region1_date.push(element)
+              //     });
+              //
+              // $.each(region1[Date], function(index, element) {
+              //       //from within the date key of the region 1 json, take each element and add it to region1_date list
+              //     region1_vol_price.push(element)
+              //     });
+              var next_element = false;
+              $.each(region1, function(axis_label, data) {
+                    //from within the date key of the region 1 json, take each element and add it to region1_date list
+                  if (next_element === false){
+                    $.each(data, function(index, element) {
+                      //from within the date key of the region 1 json, take each element and add it to region1_date list
+                      region1_date.push(element)
+                    });
+                  }
+                  if (next_element === true){
+                    $.each(data, function(index, element) {
+                      //from within the date key of the region 1 json, take each element and add it to region1_date list
+                      region1_vol_price.push(element)
+                    });
+                  }
+
+                  next_element = true;
+                  });
+
+              console.log(region1_date);
+              console.log(region1_vol_price);
+
+
+              // if (data.length() >= 2){var region2 = data[1];}
+              // if (data.length() >= 3){var region3 = data[2];}
 
               console.log(region1);
+
+              //Get region1 data for Chart.js
+
 
           }
 

@@ -84,39 +84,15 @@ def return_filtered_dataset():
 
 def time_period_graph_data(data, type_of_info, region1, region2, region3, startdate, enddate, datasets):
     # region 1 filtering
-    region1_filtered_data = data.loc[
-        (data['region'] == region1[:-1]) & (data['Date'] > startdate.strftime("%m/%d/%Y")) & (
-                    data['Date'] < enddate.strftime("%m/%d/%Y"))]
-
-    # convert dates back to string
-    region1_filtered_data['Date'] = region1_filtered_data['Date'].dt.strftime('%m-%d-%Y')
-
-    region1_filtered_data = region1_filtered_data[['Date', type_of_info]]
-    datasets.append(region1_filtered_data.to_json())
+    datasets.append(filter_region_timeperiod_df(data, region1, type_of_info, startdate, enddate))
 
     # optional region 2 filtering
     if region2 != "None " and region2 != "Select a Region":
-        region2_filtered_data = data.loc[
-            (data['region'] == region2[:-1]) & (data['Date'] > startdate.strftime("%m/%d/%Y")) & (
-                    data['Date'] < enddate.strftime("%m/%d/%Y"))]
-
-        # convert dates back to string
-        region2_filtered_data['Date'] = region2_filtered_data['Date'].strftime('%m-%d-%Y')
-
-        region2_filtered_data = region2_filtered_data[['Date', type_of_info]]
-        datasets.append(region2_filtered_data.to_json())
+        datasets.append(filter_region_timeperiod_df(data, region2, type_of_info, startdate, enddate))
 
     # optional region 3 filtering
     if region3 != "None " and region3 != "Select a Region":
-        region3_filtered_data = data.loc[
-            (data['region'] == region3[:-1]) & (data['Date'] > startdate.strftime("%m/%d/%Y")) & (
-                    data['Date'] < enddate.strftime("%m/%d/%Y"))]
-
-        # convert dates back to string
-        region3_filtered_data['Date'] = region3_filtered_data['Date'].dt.strftime('%m-%d-%Y')
-
-        region3_filtered_data = region3_filtered_data[['Date', type_of_info]]
-        datasets.append(region3_filtered_data.to_json())
+        datasets.append(filter_region_timeperiod_df(data, region3, type_of_info, startdate, enddate))
 
     # return jsonified array of dataset
     return jsonify(datasets)
@@ -124,38 +100,41 @@ def time_period_graph_data(data, type_of_info, region1, region2, region3, startd
 
 def all_time_graph_data(data, type_of_info, region1, region2, region3, datasets):
     # region 1 filtering
-    region1_filtered_data = data.loc[data['region'] == region1[:-1]]
-    region1_filtered_data = region1_filtered_data[['Date', type_of_info]]
+    datasets.append(filter_region_all_time_df(data, region1, type_of_info))
 
-    # convert dates back to string
-    region1_filtered_data['Date'] = region1_filtered_data['Date'].dt.strftime('%m-%d-%Y')
-
-    print(region1_filtered_data.head())
-    datasets.append(region1_filtered_data.to_json())
     # optional region 2 filtering
     if region2 != "None " and region2 != "Select a Region":
-        region2_filtered_data = data.loc[data['region'] == region2[:-1]]
-
-        # convert dates back to string
-        region2_filtered_data['Date'] = region2_filtered_data['Date'].dt.strftime('%m-%d-%Y')
-
-        region2_filtered_data = region2_filtered_data[['Date', type_of_info]]
-        datasets.append(region2_filtered_data.to_json())
+        datasets.append(filter_region_all_time_df(data, region2, type_of_info))
 
     # optional region 3 filtering
     if region3 != "None " and region3 != "Select a Region":
-        region3_filtered_data = data.loc[data['region'] == region3[:-1]]
-
-        # convert dates back to string
-        region3_filtered_data['Date'] = region3_filtered_data['Date'].dt.strftime('%m-%d-%Y')
-
-        region3_filtered_data = region3_filtered_data[['Date', type_of_info]]
-        datasets.append(region3_filtered_data.to_json())
+        datasets.append(filter_region_all_time_df(data, region3, type_of_info))
 
     # return jsonified array of dataset
     print(jsonify(datasets))
     return jsonify(datasets)
 
+
+def filter_region_all_time_df(data, region, type_of_info):
+    region_filtered_data = data.loc[data['region'] == region[:-1]]
+
+    # convert dates back to string
+    region_filtered_data.loc[:, 'Date'] = region_filtered_data['Date'].dt.strftime('%m-%d-%Y')
+
+    region_filtered_data = region_filtered_data[['Date', type_of_info]]
+    return region_filtered_data.to_json()
+
+
+def filter_region_timeperiod_df(data, region, type_of_info, startdate, enddate):
+    region_filtered_data = data.loc[
+        (data['region'] == region[:-1]) & (data['Date'] > startdate.strftime("%m/%d/%Y")) & (
+                data['Date'] < enddate.strftime("%m/%d/%Y"))]
+
+    # convert dates back to string
+    region_filtered_data.loc[:, 'Date'] = region_filtered_data['Date'].dt.strftime('%m-%d-%Y')
+
+    region_filtered_data = region_filtered_data[['Date', type_of_info]]
+    return region_filtered_data.to_json()
 
 if __name__ == '__main__':
     app.run()
