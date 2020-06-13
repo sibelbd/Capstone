@@ -44,7 +44,7 @@ def return_filtered_dataset():
         region3 = filters_list[2]
         timeperiod = filters_list[3]
         startdate = filters_list[4]
-        type_of_info = filters_list[5]
+        type_of_info = filters_list[5][:-1]
         enddate = None
 
     # list of filtered datasets to send back
@@ -55,7 +55,7 @@ def return_filtered_dataset():
     print(startdate)
 
     if timeperiod == "One Month ":
-        enddate = startdate + relativedelta(months=+6)
+        enddate = startdate + relativedelta(months=+1)
         print(enddate)
     elif timeperiod == "One Year ":
         enddate = startdate + relativedelta(years=+1)
@@ -63,37 +63,98 @@ def return_filtered_dataset():
         # if of all time avoid filtering data for time
         enddate = None
 
+
     # pull data into pandas dataframe
     data = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])
 
-    # Get dataset for region 1
-    # Check for if time period is all time or not
-    if timeperiod == "All Time ":
-        # region 1 filtering
-        region1_filtered_data = data.loc[(data['region'] == region1) & (data['Date'] > startdate.strftime("%m/%d/%Y")) & (data['Date'] < enddate.strftime("%m/%d/%Y"))]
-
-        # optional region 2 filtering
-        if region2 != "None " and region2 != "Select a Region":
-
-
-        # optional region 3 filtering
-
-        # return jsonified array of dataset
-
-    else:
-
-        # region 1 filtering
-
-        # optional region 2 filtering
-
-        # optional region 3 filtering
-
-        # return jsonified array of datasets
+    # Check for type of data needed
+    if type_of_info == "Price":
+        # Check for if time period is all time or not
+            if timeperiod != "All Time ":
+                return time_period_graph_data(data, "AveragePrice", region1, region2, region3, startdate, enddate, datasets)
+            else:
+                return all_time_graph_data(data, "AveragePrice", region1, region2, region3, datasets)
+    elif type_of_info == "Volume":
+        # Check for if time period is all time or not
+        if timeperiod != "All Time ":
+            return time_period_graph_data(data, "Total Volume", region1, region2, region3, startdate, enddate, datasets)
+        else:
+            return all_time_graph_data(data, "Total Volume", region1, region2, region3, datasets)
 
 
-    #
-    # # filter dataframe
-    # region1_filtered_data = data.loc[(data['region'] == region1) & (data['Date'] > startdate) & (data['Date'] < )]
+def time_period_graph_data(data, type_of_info, region1, region2, region3, startdate, enddate, datasets):
+    # region 1 filtering
+    region1_filtered_data = data.loc[
+        (data['region'] == region1[:-1]) & (data['Date'] > startdate.strftime("%m/%d/%Y")) & (
+                    data['Date'] < enddate.strftime("%m/%d/%Y"))]
+
+    # convert dates back to string
+    region1_filtered_data['Date'] = region1_filtered_data['Date'].dt.strftime('%m-%d-%Y')
+
+    region1_filtered_data = region1_filtered_data[['Date', type_of_info]]
+    datasets.append(region1_filtered_data.to_json())
+
+    # optional region 2 filtering
+    if region2 != "None " and region2 != "Select a Region":
+        region2_filtered_data = data.loc[
+            (data['region'] == region2[:-1]) & (data['Date'] > startdate.strftime("%m/%d/%Y")) & (
+                    data['Date'] < enddate.strftime("%m/%d/%Y"))]
+
+        # convert dates back to string
+        region2_filtered_data['Date'] = region2_filtered_data['Date'].strftime('%m-%d-%Y')
+
+        region2_filtered_data = region2_filtered_data[['Date', type_of_info]]
+        datasets.append(region2_filtered_data.to_json())
+
+    # optional region 3 filtering
+    if region3 != "None " and region3 != "Select a Region":
+        region3_filtered_data = data.loc[
+            (data['region'] == region3[:-1]) & (data['Date'] > startdate.strftime("%m/%d/%Y")) & (
+                    data['Date'] < enddate.strftime("%m/%d/%Y"))]
+
+        # convert dates back to string
+        region3_filtered_data['Date'] = region3_filtered_data['Date'].dt.strftime('%m-%d-%Y')
+
+        region3_filtered_data = region3_filtered_data[['Date', type_of_info]]
+        datasets.append(region3_filtered_data.to_json())
+
+    # return jsonified array of dataset
+    return jsonify(datasets)
+
+
+def all_time_graph_data(data, type_of_info, region1, region2, region3, datasets):
+    # region 1 filtering
+    region1_filtered_data = data.loc[data['region'] == region1[:-1]]
+    region1_filtered_data = region1_filtered_data[['Date', type_of_info]]
+
+    # convert dates back to string
+    region1_filtered_data['Date'] = region1_filtered_data['Date'].dt.strftime('%m-%d-%Y')
+
+    print(region1_filtered_data.head())
+    datasets.append(region1_filtered_data.to_json())
+    # optional region 2 filtering
+    if region2 != "None " and region2 != "Select a Region":
+        region2_filtered_data = data.loc[data['region'] == region2[:-1]]
+
+        # convert dates back to string
+        region2_filtered_data['Date'] = region2_filtered_data['Date'].dt.strftime('%m-%d-%Y')
+
+        region2_filtered_data = region2_filtered_data[['Date', type_of_info]]
+        datasets.append(region2_filtered_data.to_json())
+
+    # optional region 3 filtering
+    if region3 != "None " and region3 != "Select a Region":
+        region3_filtered_data = data.loc[data['region'] == region3[:-1]]
+
+        # convert dates back to string
+        region3_filtered_data['Date'] = region3_filtered_data['Date'].dt.strftime('%m-%d-%Y')
+
+        region3_filtered_data = region3_filtered_data[['Date', type_of_info]]
+        datasets.append(region3_filtered_data.to_json())
+
+    # return jsonified array of dataset
+    print(jsonify(datasets))
+    return jsonify(datasets)
 
 
 if __name__ == '__main__':

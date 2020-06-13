@@ -106,13 +106,14 @@
   $('#submit-button-regions').click(function () {
 
     //check that form is filled out properly
-    if ($('#region1-btn').text() != "Select a Region" && $('#time-period-btn').text() !== "Select a Region" &&
+    if ($('#region1-btn').text() != "Select a Region" && $('#time-period-btn').text() !== "Select a Length of Time" &&
         $('#date-picker-regions').val() !== "" && $('#volume-price-btn').text() !== "Select a Region"){
         var arr = [$('#region1-btn').text(), $('#region2-btn').text(), $('#region3-btn').text(),
         $('#time-period-btn').text(), $('#date-picker-regions').val(), $('#volume-price-btn').text()]
     } else{
       alert("Please ensure all fields are filled out.")
     }
+
     console.log($('#date-picker-regions').val())
     console.log(JSON.stringify({html_data: arr}))
 
@@ -122,8 +123,16 @@
         type: 'POST',
         contentType: 'application/json;charset=UTF-8',
         data: JSON.stringify({html_data: arr}),
-        success: function(response) {
-              console.log(response);
+        success: function(data) {
+              console.log(data);
+
+              //separate jsons into arrays
+              var region1 = data[0];
+              var region2 = data[1];
+              var region3 = data[2];
+
+              console.log(region1);
+
           }
 
         // // receive filtered dataset from web server
