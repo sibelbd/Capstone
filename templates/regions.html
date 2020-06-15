@@ -52,7 +52,7 @@
                                 <div class="dropdown-menu" id="region-dropdown-regions-3" role="menu" style="max-height: 200px; overflow-y: auto"></div>
                             </div><label>Time Period</label>
                             <div class="dropdown"><button class="btn btn-primary dropdown-toggle" id="time-period-btn" data-toggle="dropdown" aria-expanded="false"  type="button" style="margin-bottom:10px">Select a Length of Time</button>
-                                <div class="dropdown-menu" id="time-period-dropdown-regions" role="menu"><a class="dropdown-item" role="presentation" >One Year</a><a class="dropdown-item" role="presentation">One Month</a><a class="dropdown-item" role="presentation">All Time</a></div>
+                                <div class="dropdown-menu" id="time-period-dropdown-regions" role="menu"><a class="dropdown-item" role="presentation" >One Year</a><a class="dropdown-item" role="presentation">Three Months</a><a class="dropdown-item" role="presentation">All Time</a></div>
                             </div><label>Start Date of Time Period</label><input class="form-control" id="date-picker-regions" type="date"><label>Volume or Price</label>
                             <div class="dropdown"><button class="btn btn-primary dropdown-toggle" id="volume-price-btn" data-toggle="dropdown" aria-expanded="false"  type="button" style="margin-bottom:10px">Select an Option</button>
                                 <div class="dropdown-menu" id="volume-price-regions" role="menu"><a class="dropdown-item" role="presentation">Volume</a><a class="dropdown-item" role="presentation">Price</a></div>
@@ -60,7 +60,7 @@
                     </form>
                 </div>
                 <div class="col">
-                    <div><canvas data-bs-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Revenue&quot;,&quot;backgroundColor&quot;:&quot;#4e73df&quot;,&quot;borderColor&quot;:&quot;#4e73df&quot;,&quot;data&quot;:[&quot;4500&quot;,&quot;5300&quot;,&quot;6250&quot;,&quot;7800&quot;,&quot;9800&quot;,&quot;15000&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:false},&quot;title&quot;:{&quot;display&quot;:true,&quot;text&quot;:&quot;Sample Chart&quot;}}}"></canvas></div>
+                    <div><canvas id="myChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -98,6 +98,7 @@
     <div class="d-lg-none scroll-to-top position-fixed rounded"><a class="d-block js-scroll-trigger text-center text-white rounded" href="#page-top"><i class="fa fa-chevron-up"></i></a></div>
     <script src="../static/js/lib/jquery.min.js"></script>
     <script src="../static/js/lib/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
     <script src="../static/js/chart.min.js"></script>
     <script src="../static/js/bs-init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>

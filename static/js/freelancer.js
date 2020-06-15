@@ -60,19 +60,19 @@
     });
   });
 
-  //Chart updating info
-  $(function(){
-        let chart = document.querySelector('canvas').chart;
-
-        $(document).on('click', function(){
-
-            // When the document is clicked, update the chart
-            // with a random value and animate it.
-
-            chart.data.datasets[0].data[2] = Math.random()*10000;
-            chart.update();
-        });
-  });
+  // //Chart updating info
+  // $(function(){
+  //       let chart = document.querySelector('canvas').chart;
+  //
+  //       $(document).on('click', function(){
+  //
+  //           // When the document is clicked, update the chart
+  //           // with a random value and animate it.
+  //
+  //           chart.data.datasets[0].data[2] = Math.random()*10000;
+  //           chart.update();
+  //       });
+  // });
 
 
   $(function() {
@@ -124,59 +124,126 @@
         contentType: 'application/json;charset=UTF-8',
         data: JSON.stringify({html_data: arr}),
         success: function(data) {
-              console.log(data);
+            console.log(data);
 
-              //Get region1 data for Chart.js
-              var region1 = JSON.parse(data[0])
-              var region1_date = []
-              var region1_vol_price = []
+            var x_axis_label = ""
+            var y_axis_label = ""
 
-              // $.each(region1[Date], function(index, element) {
-              //       //from within the date key of the region 1 json, take each element and add it to region1_date list
-              //     region1_date.push(element)
-              //     });
-              //
-              // $.each(region1[Date], function(index, element) {
-              //       //from within the date key of the region 1 json, take each element and add it to region1_date list
-              //     region1_vol_price.push(element)
-              //     });
-              var next_element = false;
-              $.each(region1, function(axis_label, data) {
-                    //from within the date key of the region 1 json, take each element and add it to region1_date list
-                  if (next_element === false){
-                    $.each(data, function(index, element) {
-                      //from within the date key of the region 1 json, take each element and add it to region1_date list
-                      region1_date.push(element)
-                    });
-                  }
-                  if (next_element === true){
-                    $.each(data, function(index, element) {
-                      //from within the date key of the region 1 json, take each element and add it to region1_date list
-                      region1_vol_price.push(element)
-                    });
-                  }
+            //Get region1 data for Chart.js
+            var region1 = JSON.parse(data[0])
+            var region1_date = []
+            var region1_vol_price = []
+            var region1_data_final = {}
 
-                  next_element = true;
-                  });
+            for( var k = 0; k < region1.length; ++k ) {
+                console.log(moment(region1[k]['x']).format('MM-YYYY'));
+                region1[k]['x'] = moment(region1[k]['x'])//new Date(region1[k]['x']).getTime();
 
-              console.log(region1_date);
-              console.log(region1_vol_price);
+            }
+
+            // // if (data.length == 1){
+            //     var ctx = document.getElementById('myChart').getContext('2d');
+            //     var myChart = new Chart(ctx, {
+            //         type: 'scatter',
+            //         datasets:[{
+            //             label: "Region1 Data",
+            //             data: region1_data_final
+            //         }],
+            //         options: {
+            //             scales: {
+            //                 xAxes: [{
+            //                     type: 'time',
+            //                   }],
+            //             }
+            //         }
+            //     });
+
+                console.log(region1);
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var scatterChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Scatter Dataset',
+                        data:   region1
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            position: 'bottom'
+                        }]
+                    }
+                }
+            });
+                console.log(region1);
 
 
-              // if (data.length() >= 2){var region2 = data[1];}
-              // if (data.length() >= 3){var region3 = data[2];}
+            // }
+            //
+            // else if (data.length === 2){
+            //     //Get region2 data for Chart.js
+            //     var region2 = JSON.parse(data[0])
+            //     var region2_date = []
+            //     var region2_vol_price = []
+            //
+            //     var next_element = false;
+            //     $.each(region2, function(axis_label, data) {
+            //       //from within the date key of the region 1 json, take each element and add it to region1_date list
+            //       if (next_element === false){
+            //         $.each(data, function(index, element) {
+            //           //from within the date key of the region 1 json, take each element and add it to region1_date list
+            //           region2_date.push(new Date(element))
+            //         });
+            //       }
+            //       if (next_element === true){
+            //         $.each(data, function(index, element) {
+            //           //from within the date key of the region 1 json, take each element and add it to region1_date list
+            //           region2_vol_price.push(element)
+            //         });
+            //       }
+            //
+            //       next_element = true;
+            //     });
+            // }
+            // else if (data.length === 3){
+            //     //Get region3 data for Chart.js
+            //     var region3 = JSON.parse(data[0])
+            //     var region3_date = []
+            //     var region3_vol_price = []
+            //
+            //     var next_element = false;
+            //     $.each(region3, function(axis_label, data) {
+            //       //from within the date key of the region 1 json, take each element and add it to region1_date list
+            //       if (next_element === false){
+            //         $.each(data, function(index, element) {
+            //           //from within the date key of the region 1 json, take each element and add it to region1_date list
+            //           region3_date.push(new Date(element))
+            //         });
+            //       }
+            //       if (next_element === true){
+            //         $.each(data, function(index, element) {
+            //           //from within the date key of the region 1 json, take each element and add it to region1_date list
+            //           region3_vol_price.push(element)
+            //         });
+            //       }
+            //
+            //       next_element = true;
+            //     });}
+            //
+            // //condition for y-axis label to format average price nicely, since volume is already formatted
+            // if (y_axis_label == "AveragePrice"){
+            //     y_axis_label = "Average Price"
+            // }
 
-              console.log(region1);
 
-              //Get region1 data for Chart.js
-
+              // console.log(region1_date);
+              // console.log(region1_vol_price);
+              // console.log(region1_data_final);
 
           }
 
-        // // receive filtered dataset from web server
-        // success: function(data) {
-        //   alert(data);
-        // }
     })
   })
 

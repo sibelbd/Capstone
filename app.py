@@ -54,8 +54,8 @@ def return_filtered_dataset():
     startdate = datetime.strptime(startdate, '%Y-%m-%d')
     print(startdate)
 
-    if timeperiod == "One Month ":
-        enddate = startdate + relativedelta(months=+1)
+    if timeperiod == "Three Months ":
+        enddate = startdate + relativedelta(months=+3)
         print(enddate)
     elif timeperiod == "One Year ":
         enddate = startdate + relativedelta(years=+1)
@@ -66,6 +66,7 @@ def return_filtered_dataset():
 
     # pull data into pandas dataframe
     data = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])
+
 
     # Check for type of data needed
     if type_of_info == "Price":
@@ -119,22 +120,30 @@ def filter_region_all_time_df(data, region, type_of_info):
     region_filtered_data = data.loc[data['region'] == region[:-1]]
 
     # convert dates back to string
-    region_filtered_data.loc[:, 'Date'] = region_filtered_data['Date'].dt.strftime('%m-%d-%Y')
+    region_filtered_data.loc[:, 'Date'] = region_filtered_data['Date'].dt.strftime('%Y-%m-%d')
 
     region_filtered_data = region_filtered_data[['Date', type_of_info]]
-    return region_filtered_data.to_json()
+    region_filtered_data = region_filtered_data.sort_values(by='Date')
+    print(region_filtered_data.head())
+    region_filtered_data.columns = ['x', 'y']
+    return region_filtered_data.to_json(orient='records')
 
 
 def filter_region_timeperiod_df(data, region, type_of_info, startdate, enddate):
     region_filtered_data = data.loc[
-        (data['region'] == region[:-1]) & (data['Date'] > startdate.strftime("%m/%d/%Y")) & (
-                data['Date'] < enddate.strftime("%m/%d/%Y"))]
+        (data['region'] == region[:-1]) & (data['Date'] > startdate.strftime('%Y-%m-%d')) & (
+                data['Date'] < enddate.strftime('%Y-%m-%d'))]
 
     # convert dates back to string
-    region_filtered_data.loc[:, 'Date'] = region_filtered_data['Date'].dt.strftime('%m-%d-%Y')
+    region_filtered_data.loc[:, 'Date'] = region_filtered_data['Date'].dt.strftime('%Y-%m-%d')
 
     region_filtered_data = region_filtered_data[['Date', type_of_info]]
-    return region_filtered_data.to_json()
+    region_filtered_data = region_filtered_data.sort_values(by='Date')
+
+    print(region_filtered_data.head())
+    region_filtered_data.columns = ['x', 'y']
+    return region_filtered_data.to_json(orient='records')
+
 
 if __name__ == '__main__':
     app.run()
