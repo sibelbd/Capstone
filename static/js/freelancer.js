@@ -124,128 +124,235 @@
         contentType: 'application/json;charset=UTF-8',
         data: JSON.stringify({html_data: arr}),
         success: function(data) {
-            console.log(data);
 
+            // Identify which regions are being displayed
+            var region1_name =$('#region1-btn').text();
+            var region2_name =$('#region2-btn').text();
+            var region3_name =$('#region3-btn').text();
+            var type_of_data =$('#volume-price-btn').text();
+            var y_axis_label = "Volume, Number of Avocados Sold"
             var x_axis_label = ""
-            var y_axis_label = ""
+
+            // Modify type_of_data label to better fit y axis label later when creating the graph
+            if (type_of_data === "Price "){
+                type_of_data = "Prices";
+                y_axis_label = "Price Per Avocado In Dollars ($)";
+            }
+            else{
+                type_of_data = "Volume";
+            }
+
+            //set x-axis label
+            if ($('#time-period-btn').text() === "Three Months "){
+                x_axis_label = "Time (Months)";
+            }
+            else if ($('#time-period-btn').text() === "One Year "){
+                x_axis_label = "Time (Quarterly)";
+            }
+            else if ($('#time-period-btn').text() === "All Time "){
+                x_axis_label = "Time (Yearly)";
+            }
+
+            // Check that region 2 is not none or "Select a Region "
+            // If it is and the length of the data is 3 then set region2_name equal to region3_name
+            // because there's only two regions being displayed
+            if (region2_name === "None " || region2_name === "Select a Region"){
+                region2_name = region3_name
+            }
+
 
             //Get region1 data for Chart.js
             var region1 = JSON.parse(data[0])
-            var region1_date = []
-            var region1_vol_price = []
-            var region1_data_final = {}
 
             for( var k = 0; k < region1.length; ++k ) {
-                console.log(moment(region1[k]['x']).format('MM-YYYY'));
                 region1[k]['x'] = moment(region1[k]['x'])//new Date(region1[k]['x']).getTime();
-
             }
 
-            // // if (data.length == 1){
-            //     var ctx = document.getElementById('myChart').getContext('2d');
-            //     var myChart = new Chart(ctx, {
-            //         type: 'scatter',
-            //         datasets:[{
-            //             label: "Region1 Data",
-            //             data: region1_data_final
-            //         }],
-            //         options: {
-            //             scales: {
-            //                 xAxes: [{
-            //                     type: 'time',
-            //                   }],
-            //             }
-            //         }
-            //     });
+            // remove old canvas (chart) element and create a new one
+            // this is
+            $('#myChart').remove(); // this is my <canvas> element
+            $('#chart_div').append('<canvas id="myChart"><canvas>');
 
+            if (data.length == 1){
                 console.log(region1);
                 var ctx = document.getElementById('myChart').getContext('2d');
                 var scatterChart = new Chart(ctx, {
                 type: 'scatter',
                 data: {
                     datasets: [{
-                        label: 'Scatter Dataset',
-                        data:   region1
+                        label: region1_name,
+                        data: region1,
+                        backgroundColor: 'rgba(245, 66, 66, 0.5)'
                     }]
                 },
                 options: {
                     scales: {
                         xAxes: [{
                             type: 'time',
-                            position: 'bottom'
+                            position: 'bottom',
+                            scaleLabel: {
+                                display: true,
+                                labelString: x_axis_label
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                // Include a dollar sign in the ticks
+                                callback: function(value, index, values) {
+                                    if (type_of_data == "Prices") {
+                                        return '$' + value;
+                                    }
+                                    else{
+                                        return value;
+                                    }
+                                }
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: y_axis_label
+                            }
                         }]
+                    },
+                    title: {
+                        display: true,
+                        text: 'Avocado ' + type_of_data + ' In ' + region1_name + "Over Time"
                     }
                 }
             });
                 console.log(region1);
+            };
 
+            if (data.length == 2){
 
-            // }
-            //
-            // else if (data.length === 2){
-            //     //Get region2 data for Chart.js
-            //     var region2 = JSON.parse(data[0])
-            //     var region2_date = []
-            //     var region2_vol_price = []
-            //
-            //     var next_element = false;
-            //     $.each(region2, function(axis_label, data) {
-            //       //from within the date key of the region 1 json, take each element and add it to region1_date list
-            //       if (next_element === false){
-            //         $.each(data, function(index, element) {
-            //           //from within the date key of the region 1 json, take each element and add it to region1_date list
-            //           region2_date.push(new Date(element))
-            //         });
-            //       }
-            //       if (next_element === true){
-            //         $.each(data, function(index, element) {
-            //           //from within the date key of the region 1 json, take each element and add it to region1_date list
-            //           region2_vol_price.push(element)
-            //         });
-            //       }
-            //
-            //       next_element = true;
-            //     });
-            // }
-            // else if (data.length === 3){
-            //     //Get region3 data for Chart.js
-            //     var region3 = JSON.parse(data[0])
-            //     var region3_date = []
-            //     var region3_vol_price = []
-            //
-            //     var next_element = false;
-            //     $.each(region3, function(axis_label, data) {
-            //       //from within the date key of the region 1 json, take each element and add it to region1_date list
-            //       if (next_element === false){
-            //         $.each(data, function(index, element) {
-            //           //from within the date key of the region 1 json, take each element and add it to region1_date list
-            //           region3_date.push(new Date(element))
-            //         });
-            //       }
-            //       if (next_element === true){
-            //         $.each(data, function(index, element) {
-            //           //from within the date key of the region 1 json, take each element and add it to region1_date list
-            //           region3_vol_price.push(element)
-            //         });
-            //       }
-            //
-            //       next_element = true;
-            //     });}
-            //
-            // //condition for y-axis label to format average price nicely, since volume is already formatted
-            // if (y_axis_label == "AveragePrice"){
-            //     y_axis_label = "Average Price"
-            // }
+                //Get region2 data for Chart.js
+                var region2 = JSON.parse(data[1])
 
+                for( var k = 0; k < region2.length; ++k ) {
+                    region2[k]['x'] = moment(region2[k]['x'])//new Date(region1[k]['x']).getTime();
+                }
 
-              // console.log(region1_date);
-              // console.log(region1_vol_price);
-              // console.log(region1_data_final);
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var scatterChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: region1_name,
+                        data:   region1,
+                        backgroundColor: 'rgba(245, 66, 66, 0.5)'
+                    },
+                        {label: region2_name,
+                        data:   region2,
+                        backgroundColor: 'rgba(75, 66, 245, 0.5)'}]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            position: 'bottom',
+                            scaleLabel: {
+                                display: true,
+                                labelString: x_axis_label
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                // Include a dollar sign in the ticks
+                                callback: function(value, index, values) {
+                                    if (type_of_data == "Prices"){
+                                       return '$' + value;
+                                    }
+                                    else{
+                                        return value;
+                                    }
+                                }
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: y_axis_label
+                            }
+                        }]
+                    },
+                    title: {
+                        display: true,
+                        text: 'Avocado ' + type_of_data + ' In ' + region1_name + "And " + region2_name + "Over Time"
+                    }
+                }
+            });
+            };
+
+            if (data.length == 3){
+
+                //Get region2 data for Chart.js
+                var region2 = JSON.parse(data[1])
+
+                for( var k = 0; k < region2.length; ++k ) {
+                    region2[k]['x'] = moment(region2[k]['x'])
+                }
+
+                //Get region2 data for Chart.js
+                var region3 = JSON.parse(data[2])
+
+                for( var k = 0; k < region3.length; ++k ) {
+                    region3[k]['x'] = moment(region3[k]['x'])
+                }
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var scatterChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: region1_name,
+                        data:   region1,
+                        backgroundColor: 'rgba(245, 66, 66, 0.5)'
+                    },
+                        {label: region2_name,
+                        data:   region2,
+                         backgroundColor: 'rgba(75, 66, 245, 0.5)'},
+                        {label: region3_name,
+                        data:   region3,
+                         backgroundColor: 'rgba(38, 255, 0, 0.5)'}]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            position: 'bottom',
+                            scaleLabel: {
+                                display: true,
+                                labelString: x_axis_label
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+
+                                callback: function(value, index, values) {
+                                    if (type_of_data == "Prices"){
+                                       return '$' + value;
+                                    }
+                                    else{
+                                        return value;
+                                    }
+                                }
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: y_axis_label
+                            }
+                        }]
+                    },
+                    title: {
+                        display: true,
+                        text: 'Avocado ' + type_of_data + ' In ' + region1_name + ", " + region2_name + ", and " + region3_name + "Over Time"
+                    }
+                }
+            });
+            };
 
           }
-
     })
   })
+
+
 
  
 })(jQuery); // End of use strict

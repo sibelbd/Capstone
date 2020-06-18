@@ -29,7 +29,7 @@ def get_all_regions():
     regions = data.region.unique()
 
     # remove invalid regions
-    regions = [x for x in regions if x not in ['GreatLakes', 'Midsouth', 'Northeast', 'NorthernNewEngland', 'Plains', 'SouthCentral', 'Southeast', 'West', 'TotalUS']]
+    regions = [x for x in regions if x not in ['GreatLakes', 'Midsouth', 'Northeast', 'NorthernNewEngland', 'Plains', 'SouthCentral', 'Southeast', 'West', 'TotalUS', 'California']]
     return jsonify(regions)
 
 
@@ -117,7 +117,7 @@ def all_time_graph_data(data, type_of_info, region1, region2, region3, datasets)
 
 
 def filter_region_all_time_df(data, region, type_of_info):
-    region_filtered_data = data.loc[data['region'] == region[:-1]]
+    region_filtered_data = data.loc[(data['region'] == region[:-1]) & (data['type'] == 'conventional')]
 
     # convert dates back to string
     region_filtered_data.loc[:, 'Date'] = region_filtered_data['Date'].dt.strftime('%Y-%m-%d')
@@ -132,7 +132,7 @@ def filter_region_all_time_df(data, region, type_of_info):
 def filter_region_timeperiod_df(data, region, type_of_info, startdate, enddate):
     region_filtered_data = data.loc[
         (data['region'] == region[:-1]) & (data['Date'] > startdate.strftime('%Y-%m-%d')) & (
-                data['Date'] < enddate.strftime('%Y-%m-%d'))]
+                data['Date'] < enddate.strftime('%Y-%m-%d')) & (data['type'] == 'conventional')]
 
     # convert dates back to string
     region_filtered_data.loc[:, 'Date'] = region_filtered_data['Date'].dt.strftime('%Y-%m-%d')
