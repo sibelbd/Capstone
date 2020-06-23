@@ -3,6 +3,7 @@ from flask_fontawesome import FontAwesome
 import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import region_filterer
 
 app = Flask(__name__)
 fa = FontAwesome(app)
@@ -85,15 +86,15 @@ def return_filtered_dataset():
 
 def time_period_graph_data(data, type_of_info, region1, region2, region3, startdate, enddate, datasets):
     # region 1 filtering
-    datasets.append(filter_region_timeperiod_df(data, region1, type_of_info, startdate, enddate))
+    datasets.append(region_filterer.return_data_as_json(region_filterer.filter_region_timeperiod_df(data, region1, type_of_info, startdate, enddate)))
 
     # optional region 2 filtering
     if region2 != "None " and region2 != "Select a Region":
-        datasets.append(filter_region_timeperiod_df(data, region2, type_of_info, startdate, enddate))
+        datasets.append(region_filterer.return_data_as_json(region_filterer.filter_region_timeperiod_df(data, region2, type_of_info, startdate, enddate)))
 
     # optional region 3 filtering
     if region3 != "None " and region3 != "Select a Region":
-        datasets.append(filter_region_timeperiod_df(data, region3, type_of_info, startdate, enddate))
+        datasets.append(region_filterer.return_data_as_json(region_filterer.filter_region_timeperiod_df(data, region3, type_of_info, startdate, enddate)))
 
     # return jsonified array of dataset
     return jsonify(datasets)
@@ -101,48 +102,19 @@ def time_period_graph_data(data, type_of_info, region1, region2, region3, startd
 
 def all_time_graph_data(data, type_of_info, region1, region2, region3, datasets):
     # region 1 filtering
-    datasets.append(filter_region_all_time_df(data, region1, type_of_info))
+    datasets.append(region_filterer.return_data_as_json(region_filterer.filter_region_all_time_df(data, region1, type_of_info)))
 
     # optional region 2 filtering
     if region2 != "None " and region2 != "Select a Region":
-        datasets.append(filter_region_all_time_df(data, region2, type_of_info))
+        datasets.append(region_filterer.return_data_as_json(region_filterer.filter_region_all_time_df(data, region2, type_of_info)))
 
     # optional region 3 filtering
     if region3 != "None " and region3 != "Select a Region":
-        datasets.append(filter_region_all_time_df(data, region3, type_of_info))
+        datasets.append(region_filterer.return_data_as_json(region_filterer.filter_region_all_time_df(data, region3, type_of_info)))
 
     # return jsonified array of dataset
     print(jsonify(datasets))
     return jsonify(datasets)
-
-
-def filter_region_all_time_df(data, region, type_of_info):
-    region_filtered_data = data.loc[(data['region'] == region[:-1]) & (data['type'] == 'conventional')]
-
-    # convert dates back to string
-    region_filtered_data.loc[:, 'Date'] = region_filtered_data['Date'].dt.strftime('%Y-%m-%d')
-
-    region_filtered_data = region_filtered_data[['Date', type_of_info]]
-    region_filtered_data = region_filtered_data.sort_values(by='Date')
-    print(region_filtered_data.head())
-    region_filtered_data.columns = ['x', 'y']
-    return region_filtered_data.to_json(orient='records')
-
-
-def filter_region_timeperiod_df(data, region, type_of_info, startdate, enddate):
-    region_filtered_data = data.loc[
-        (data['region'] == region[:-1]) & (data['Date'] > startdate.strftime('%Y-%m-%d')) & (
-                data['Date'] < enddate.strftime('%Y-%m-%d')) & (data['type'] == 'conventional')]
-
-    # convert dates back to string
-    region_filtered_data.loc[:, 'Date'] = region_filtered_data['Date'].dt.strftime('%Y-%m-%d')
-
-    region_filtered_data = region_filtered_data[['Date', type_of_info]]
-    region_filtered_data = region_filtered_data.sort_values(by='Date')
-
-    print(region_filtered_data.head())
-    region_filtered_data.columns = ['x', 'y']
-    return region_filtered_data.to_json(orient='records')
 
 
 if __name__ == '__main__':
