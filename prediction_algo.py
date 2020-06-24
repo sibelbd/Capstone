@@ -1,11 +1,8 @@
 from datetime import datetime
-from pmdarima import auto_arima
 import pandas as pd
 import matplotlib.pylab as plt
 import numpy as np
 import region_filterer
-# Fit a SARIMAX(0, 1, 1)x(2, 1, 1, 12) on the training set
-from statsmodels.tsa.statespace.sarimax import SARIMAX
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
@@ -13,62 +10,70 @@ from statsmodels.tsa.arima_model import ARIMA
 from statsmodels.tsa.stattools import acf, pacf
 from sklearn.metrics import mean_squared_error
 
-# load dataset
-series = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])
-# filter dataframe
-# sample region name
-region = "Atlanta "
-# filter all prices from atlanta for all time and set date as the index to turn data into a time series
-series = region_filterer.filter_region_all_time_df(series, region, "AveragePrice").set_index('Date')
 
-print(series.head())
-print(series.dtypes)
-plt.plot(series)
-plt.show()
+def get_prediction(region, date):
+    model_fit = create_predictive_model(region)
 
-# # ETS Decomposition
-# result = seasonal_decompose(series['AveragePrice'],
-#                             model='multiplicative', period=7)
-#
-# # ETS plot
-# result.plot()
-#
-# # Fit auto_arima function to AirPassengers dataset
-# stepwise_fit = auto_arima(series['AveragePrice'], start_p=1, start_q=1,
-#                           max_p=3, max_q=3, m=12,
-#                           start_P=0, seasonal=True,
-#                           d=None, D=1, trace=True,
-#                           error_action='ignore',  # we don't want to know if an order does not work
-#                           suppress_warnings=True,  # we don't want convergence warnings
-#                           stepwise=True)  # set to stepwise
-#
-# # To print the summary
-# stepwise_fit.summary()
-#
-# size = int(len(series.values) * 0.66)
-#
-# # Split data into train / test sets
-# train = series.iloc[:size]
-# test = series.iloc[size:]
-#
-# model = SARIMAX(train['AveragePrice'],
-#                 order=(0, 0, 0),
-#                 seasonal_order=(0, 1, 0, 12), freq="QS-OCT")
-#
-# result = model.fit()
-# result.summary()
-#
-# start = len(train)
-# end = len(train) + len(test) - 1
-#
-#
-# predictions = result.predict(start, end,
-#                              typ='levels').rename("Predictions")
-#
-# # plot predictions and actual values
-# predictions.plot(legend=True)
-# test['AveragePrice'].plot(legend=True)
+    # forecast
+    if date != "":
+        # forecast data for future date
+        # get last date in dataset
+        last_date_in_data = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])['Date'].max()
 
+        # subtract last date of dataset from future week
+        future_week = datetime.strptime(date, '%Y-%m-%d')
+        num_of_steps_to_future = (future_week - last_date_in_data).days // 7
+
+        # increment forecast by weeks many steps to return the future prediction
+        # steps is the number of weeks into the future that must be predicted
+        forecast = model_fit.forecast(steps=num_of_steps_to_future)[0]
+        array_length = len(forecast)
+        # return last step
+        return int(round(forecast[array_length - 1]))
+    else:
+        # forecast data for today
+        # get last date in dataset
+        last_date_in_data = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])['Date'].max()
+
+        # subtract last date of dataset from future week
+        future_week = datetime.today()
+        num_of_steps_to_future = (future_week - last_date_in_data).days // 7
+
+        # increment forecast by weeks many steps to return the future prediction
+        # steps is the number of weeks into the future that must be predicted
+        forecast = model_fit.forecast(steps=num_of_steps_to_future)[0]
+        array_length = len(forecast)
+        # return last step
+        return int(round(forecast[array_length - 1]))
+
+
+def create_predictive_model(region):
+    series = get_series(region)
+    # uncomment these when modifying ML algo to view graphs (1/3)
+    # test_stationarity(series)
+    # smoothing_data(series)
+    # moving_avg_data(series)
+    # series_diff = difference_data(series)
+    # decompose_data(series)
+    # plot_acf_pacf(series_diff)
+    model_fit = train_model(series)
+
+    return model_fit
+
+
+def get_series(region):
+    # load dataset
+    series = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])
+    # filter all prices from atlanta for all time and set date as the index to turn data into a time series
+    series = region_filterer.filter_region_all_time_df(series, region, "Total Volume").set_index('Date')
+
+    # uncomment these when modifying ML algo to view graphs (2/3)
+    # print(series.head())
+    # print(series.dtypes)
+    # plt.plot(series)
+    # plt.show()
+
+    return series
 
 
 def test_stationarity(timeseries):
@@ -93,122 +98,123 @@ def test_stationarity(timeseries):
     print(dfoutput)
 
 
-#
-#
-# test_stationarity(series)
-# Smoothing with moving average
-moving_avg = series.rolling(window=12, center=False).mean()
-plt.plot(series)
-plt.plot(moving_avg, color='red')
-plt.show()
+def smoothing_data(series):
+    # Smoothing with moving average
+    moving_avg = series.rolling(window=12, center=False).mean()
+    plt.plot(series)
+    plt.plot(moving_avg, color='red')
+    plt.show()
 
-series_moving_avg_diff = series - moving_avg
-print(series_moving_avg_diff.head(12))
-series_moving_avg_diff.dropna(inplace=True)
-print(series_moving_avg_diff.head())
+    series_moving_avg_diff = series - moving_avg
+    print(series_moving_avg_diff.head(12))
+    series_moving_avg_diff.dropna(inplace=True)
+    print(series_moving_avg_diff.head())
 
-test_stationarity(series_moving_avg_diff)
+    test_stationarity(series_moving_avg_diff)
 
-# exponentially weighted moving average
-expweighted_avg = series.ewm(halflife=12, ignore_na=False, min_periods=0, adjust=True).mean()
-plt.plot(series)
-plt.plot(expweighted_avg, color='red')
-plt.show()
 
-series_ewma_diff = series - expweighted_avg
-test_stationarity(series_ewma_diff)
+def moving_avg_data(series):
+    # exponentially weighted moving average
+    expweighted_avg = series.ewm(halflife=12, ignore_na=False, min_periods=0, adjust=True).mean()
+    plt.plot(series)
+    plt.plot(expweighted_avg, color='red')
+    plt.show()
 
-# Take first difference:
-series_diff = series - series.shift()
-plt.plot(series_diff)
-plt.show()
+    series_ewma_diff = series - expweighted_avg
+    test_stationarity(series_ewma_diff)
 
-series_diff.dropna(inplace=True)
-test_stationarity(series_diff)
 
-decomposition = seasonal_decompose(series, period=30)
+def difference_data(series):
+    # Take first difference:
+    series_diff = series - series.shift()
+    plt.plot(series_diff)
+    plt.show()
+    series_diff.dropna(inplace=True)
+    test_stationarity(series_diff)
+    return series_diff
 
-trend = decomposition.trend
-seasonal = decomposition.seasonal
-residual = decomposition.resid
 
-plt.subplot(411)
-plt.plot(series, label='Original')
-plt.legend(loc='best')
-plt.subplot(412)
-plt.plot(trend, label='Trend')
-plt.legend(loc='best')
-plt.subplot(413)
-plt.plot(seasonal, label='Seasonality')
-plt.legend(loc='best')
-plt.subplot(414)
-plt.plot(residual, label='Residuals')
-plt.legend(loc='best')
-plt.tight_layout()
-plt.show()
+def decompose_data(series):
+    decomposition = seasonal_decompose(series, period=30)
 
-series_decompose = residual
-series_decompose.dropna(inplace=True)
-print(series_decompose.describe())
-test_stationarity(series_decompose)
+    trend = decomposition.trend
+    seasonal = decomposition.seasonal
+    residual = decomposition.resid
 
-plot_acf(series_diff, lags=20)
-plot_pacf(series_diff, lags=20)
+    # Plot decomposition
+    plt.subplot(411)
+    plt.plot(series, label='Original')
+    plt.legend(loc='best')
+    plt.subplot(412)
+    plt.plot(trend, label='Trend')
+    plt.legend(loc='best')
+    plt.subplot(413)
+    plt.plot(seasonal, label='Seasonality')
+    plt.legend(loc='best')
+    plt.subplot(414)
+    plt.plot(residual, label='Residuals')
+    plt.legend(loc='best')
+    plt.tight_layout()
+    plt.show()
 
-plt.show()
+    series_decompose = residual
+    series_decompose.dropna(inplace=True)
+    print(series_decompose.describe())
+    test_stationarity(series_decompose)
 
-lag_acf = acf(series_diff, nlags=12)
-lag_pacf = pacf(series_diff, nlags=12, method='ols')
 
-# Plot ACF:
-plt.subplot(121)
-plt.plot(lag_acf)
-plt.axhline(y=0, linestyle='--', color='gray')
-plt.axhline(y=-1.96 / np.sqrt(len(series_diff)), linestyle='--', color='gray')
-plt.axhline(y=1.96 / np.sqrt(len(series_diff)), linestyle='--', color='gray')
-plt.title('Autocorrelation Function')
+def plot_acf_pacf(series_diff):
+    plot_acf(series_diff, lags=20)
+    plot_pacf(series_diff, lags=20)
 
-# Plot PACF:
-plt.subplot(122)
-plt.plot(lag_pacf)
-plt.axhline(y=0, linestyle='--', color='gray')
-plt.axhline(y=-1.96 / np.sqrt(len(series_diff)), linestyle='--', color='gray')
-plt.axhline(y=1.96 / np.sqrt(len(series_diff)), linestyle='--', color='gray')
-plt.title('Partial Autocorrelation Function')
-plt.tight_layout()
-plt.show()
+    plt.show()
 
-X = series.values
-size = int(len(X) * 0.66)
-train, test = X[0:size], X[size:len(X)]
-history = [x for x in train]
-predictions = list()
-for t in range(len(test)):
-    model = ARIMA(history, order=(2, 1, 0))
-    model_fit = model.fit(disp=0)
-    output = model_fit.forecast()
-    yhat = output[0]
-    predictions.append(yhat)
-    obs = test[t]
-    history.append(obs)
-    print('predicted=%f, expected=%f' % (yhat, obs))
-error = mean_squared_error(test, predictions)
-print('Test MSE: %.3f' % error)
-# plot
-plt.plot(test)
-plt.plot(predictions, color='red')
-plt.show()
+    lag_acf = acf(series_diff, nlags=12)
+    lag_pacf = pacf(series_diff, nlags=12, method='ols')
 
-# get last date of dataset
+    # Plot ACF:
+    plt.subplot(121)
+    plt.plot(lag_acf)
+    plt.axhline(y=0, linestyle='--', color='gray')
+    plt.axhline(y=-1.96 / np.sqrt(len(series_diff)), linestyle='--', color='gray')
+    plt.axhline(y=1.96 / np.sqrt(len(series_diff)), linestyle='--', color='gray')
+    plt.title('Autocorrelation Function')
 
-# get future date
+    # Plot PACF:
+    plt.subplot(122)
+    plt.plot(lag_pacf)
+    plt.axhline(y=0, linestyle='--', color='gray')
+    plt.axhline(y=-1.96 / np.sqrt(len(series_diff)), linestyle='--', color='gray')
+    plt.axhline(y=1.96 / np.sqrt(len(series_diff)), linestyle='--', color='gray')
+    plt.title('Partial Autocorrelation Function')
+    plt.tight_layout()
+    plt.show()
 
-# subtract last date of dataset from future week
 
-# get date difference in weeks
+def train_model(series):
+    X = series.values
+    size = int(len(X) * 0.66)
+    train, test = X[0:size], X[size:len(X)]
+    history = [x for x in train]
+    predictions = list()
+    for t in range(len(test)):
+        model = ARIMA(history, order=(1, 0, 1))
+        model_fit = model.fit(disp=0)
+        output = model_fit.forecast()
+        yhat = output[0]
+        predictions.append(yhat)
+        obs = test[t]
+        history.append(obs)
+        # for modifying ML
+        # print('predicted=%f, expected=%f' % (yhat, obs))
+    error = mean_squared_error(test, predictions)
+    # for modifying ML
+    # print('Test MSE: %.3f' % error)
 
-# increment forecast by weeks many steps to return the future prediction
+    # uncomment these when modifying ML algo to view graphs (3/3)
+    # # plot
+    # plt.plot(test)
+    # plt.plot(predictions, color='red')
+    # plt.show()
 
-# steps is the number of weeks into the future that must be predicted
-forecast = model_fit.forecast(steps=12)[0]
-print(forecast)
+    return model_fit

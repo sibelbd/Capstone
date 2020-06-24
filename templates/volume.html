@@ -26,42 +26,29 @@
             </div>
         </div>
     </nav>
-    <header class="masthead bg-primary text-white text-center"><img src="../static/img/avocado%20icon.png" style="padding-bottom:40px"/>
+    <header class="masthead bg-primary text-white text-center">
         <div class="container">
-            <h1>Majesty Avocados</h1>
-            <hr class="star-light">
-            <h2 class="font-weight-light mb-0">Mexico's Fastest Growing Avocado Distributor</h2>
+            <h1>Volume Prediction</h1>
+            <h2 class="font-weight-light mb-0">Predict future volume for your market.</h2>
         </div>
     </header>
-    <section id="tools" class="tools">
+    <section id="portfolio" class="portfolio">
         <div class="container">
-            <h2 class="text-uppercase text-center text-secondary">Tools</h2>
+            <h2 class="text-uppercase text-center text-secondary">Market Volume Calculator</h2>
             <hr class="star-dark mb-5">
             <div class="row">
-                <div class="col">
-                    <div class="card-group">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Volume Prediction Tool</h4>
-                                <p class="card-text">Majesty Avocados volume prediction tool is a utility that can be used to calculate volume for avocados within a certain market.&nbsp;</p><a class="btn btn-primary" role="button" href="volume.html">Go There Now</a></div>
-                        </div>
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Target Regions Analysis</h4>
-                                <p class="card-text">The Target Regions Analysis utility is used to examine trends and provide an interactive view of regional data over time.</p><a class="btn btn-primary" role="button" href="regions.html">Go There Now</a></div>
-                        </div>
-                    </div>
+                <div class="col-md-4 mb-5 mb-lg-0">
+                    <h4 class="text-uppercase mb-4">Volume Estimate</h4>
+                    <p id="volume-estimate">Once you fill out the form, your volume estimate will appear here.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-    <section id="about" class="bg-primary text-white mb-0">
-        <div class="container">
-            <h2 class="text-uppercase text-center text-white">About</h2>
-            <hr class="star-light mb-5">
-            <div class="row">
                 <div class="col">
-                    <h1>Majesty Avocados LLC. is Mexico's fastest growing avocado distributor. Our business unifies Mexico's small avocado farms, expanding their reach while bringing consumers the freshest of produce at a reasonable price.</h1>
+                    <p>Fill out and submit the form to view a volume estimation for your selected market. You may optionally include a date to find an ideal volume for any point in time. If you choose not to include this, the volume calculator will assume the
+                        date is today. <strong>The prediction can take several seconds to load, we appreciate your patience.</strong></p>
+                    <div id="form-group-volume" class="form-group"><label>Region</label>
+                        <div class="dropdown"><button id="region-btn-volume" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"  type="button">Select a Region</button>
+                            <div class="dropdown-menu" id="region-dropdown-price" role="menu" style="max-height: 200px; overflow-y: auto"></div>
+
+                        </div><label>Sales Date (Optional)&nbsp;</label><input id="date-picker-volume" type="date"><button class="btn btn-warning" id="submit-button-volume" type="submit" style="margin: 20px;">Submit</button></div>
                 </div>
             </div>
         </div>
@@ -69,6 +56,8 @@
     <div class="copyright py-4 text-center text-white">
         <div class="container"><small>Copyright ©&nbsp;Majesty Avocados 2018</small></div>
     </div>
+    <div class="d-lg-none scroll-to-top position-fixed rounded"><a class="d-block js-scroll-trigger text-center text-white rounded" href="#page-top"><i class="fa fa-chevron-up"></i></a></div>
+
     <script src="../static/js/lib/jquery.min.js"></script>
     <script src="../static/js/lib/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
@@ -76,6 +65,6 @@
     <script src="../static/js/bs-init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
     <script src="../static/js/freelancer.js"></script>
-
 </body>
+
 </html>
