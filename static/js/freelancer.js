@@ -52,7 +52,7 @@
     $(window).scroll(navbarCollapse);
 
 // Floating label headings for the contact form
-    $(function () {
+    $( document ).ready(function() {
         $("body").on("input propertychange", ".floating-label-form-group", function (e) {
             $(this).toggleClass("floating-label-form-group-with-value", !!$(e.target).val());
         }).on("focus", ".floating-label-form-group", function () {
@@ -63,7 +63,7 @@
     });
 
 
-    $(function () {
+    $( document ).ready(function() {
 
         // ajax request to get list of regions and populate region dropdowns
         $.ajax({
@@ -84,7 +84,8 @@
 
     });
 
-    $(function () {
+    $( document ).ready(function() {
+
         $('#us-volume-pie').remove(); // this is my <canvas> element
         $('#pie-container').append('<canvas id="us-volume-pie"><canvas>');
 
@@ -157,7 +158,6 @@
 
 
     $(document).on('click', '.dropdown-menu a', function () {
-        console.log("Selected Option:" + $(this).text());
         $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
         $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
     });
@@ -173,7 +173,6 @@
             alert("Please ensure all fields are filled out.")
         }
 
-        console.log(JSON.stringify({html_data: arr}))
 
         // send filters
         $.ajax({
@@ -232,7 +231,6 @@
                 $('#chart_div').append('<canvas id="myChart"><canvas>');
 
                 if (data.length == 1) {
-                    console.log(region1);
                     var ctx = document.getElementById('myChart').getContext('2d');
                     var scatterChart = new Chart(ctx, {
                         type: chart_type,
@@ -445,7 +443,7 @@
                     predicted_date = "on " + new Date(predicted_date).toDateString();
                 }
 
-                // get data from app.py and update page
+                // get data from main.py and update page
                 $('#volume-estimate').text('The estimated volume ' + predicted_date + " in " + region + "is " + data +".");
                 $('#volume-spinner').remove();
             }

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
     <link rel="stylesheet" href="../static/fonts/font-awesome.min.css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <script src="https://kit.fontawesome.com/5703662b44.js" crossorigin="anonymous"></script>
+
 
 
 </head>
@@ -53,7 +53,7 @@
                             </div><label>Time Period</label>
                             <div class="dropdown"><button class="btn btn-primary dropdown-toggle" id="time-period-btn" data-toggle="dropdown" aria-expanded="false"  type="button" style="margin-bottom:10px">Select a Length of Time</button>
                                 <div class="dropdown-menu" id="time-period-dropdown-regions" role="menu"><a class="dropdown-item" role="presentation" >One Year</a><a class="dropdown-item" role="presentation">Three Months</a><a class="dropdown-item" role="presentation">All Time</a></div>
-                            </div><label>Start Date of Time Period</label><input class="form-control" id="date-picker-regions" type="date"><label>Volume or Price</label>
+                            </div><label>Start Date of Time Period</label><input class="form-control" id="date-picker-regions" type="date" min='2015-01-01' max='2018-01-01'><label>Volume or Price</label>
                             <div class="dropdown"><button class="btn btn-primary dropdown-toggle" id="volume-price-btn" data-toggle="dropdown" aria-expanded="false"  type="button" style="margin-bottom:10px">Select an Option</button>
                                 <div class="dropdown-menu" id="volume-price-regions" role="menu"><a class="dropdown-item" role="presentation">Volume</a><a class="dropdown-item" role="presentation">Price</a></div>
                             </div><button class="btn btn-secondary" type='button' id="submit-button-regions" style="margin: 20px;">Submit</button></div>
@@ -106,6 +106,7 @@
     <script src="../static/js/bs-init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
     <script src="../static/js/freelancer.js"></script>
+    <script src="https://kit.fontawesome.com/5703662b44.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

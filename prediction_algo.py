@@ -18,7 +18,7 @@ def get_prediction(region, date):
     if date != "":
         # forecast data for future date
         # get last date in dataset
-        last_date_in_data = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])['Date'].max()
+        last_date_in_data = pd.read_csv('./templates/avocado.csv', parse_dates=['Date'])['Date'].max()
 
         # subtract last date of dataset from future week
         future_week = datetime.strptime(date, '%Y-%m-%d')
@@ -33,7 +33,7 @@ def get_prediction(region, date):
     else:
         # forecast data for today
         # get last date in dataset
-        last_date_in_data = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])['Date'].max()
+        last_date_in_data = pd.read_csv('./templates/avocado.csv', parse_dates=['Date'])['Date'].max()
 
         # subtract last date of dataset from future week
         future_week = datetime.today()
@@ -63,7 +63,7 @@ def create_predictive_model(region):
 
 def get_series(region):
     # load dataset
-    series = pd.read_csv('./templates/avocado_wrangled.csv', parse_dates=['Date'])
+    series = pd.read_csv('./templates/avocado.csv', parse_dates=['Date'])
     # filter all prices from atlanta for all time and set date as the index to turn data into a time series
     series = region_filterer.filter_region_all_time_df(series, region, "Total Volume").set_index('Date')
 
